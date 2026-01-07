@@ -3,12 +3,13 @@ import { cashOutline, walletOutline, calendarOutline } from "ionicons/icons"
 import { useIncome } from "./hooks/useIncome"
 import { useFilters } from "./hooks/useFilters"
 import { usePagination } from "./hooks/usePagination"
-import { exportToCSV } from "./utils/export"
+import { exportToExcel } from "./utils/export"
 import { Header } from "./components/Header"
 import { StatsCard } from "./components/StatsCard"
 import { PeriodSelector } from "./components/PeriodSelector"
 import { TransactionsTable } from "./components/TransactionsTable"
 import { FilterModal } from "./components/FilterModal"
+import { PeriodSelectorModal } from "./components/PeriodSelectorModal"
 import { Pagination } from "./components/Pagination"
 import styles from "./styles/Income.module.css"
 
@@ -72,11 +73,17 @@ function Income() {
     resetFilters,
   } = useFilters(reservations)
   const [showFilterModal, setShowFilterModal] = useState(false)
+  const [showPeriodModal, setShowPeriodModal] = useState(false)
 
   const { currentItems, currentPage, totalPages, goToPage } = usePagination(filteredReservations, 10)
 
-  const handleExport = () => {
-    exportToCSV(filteredReservations)
+  const handleExportClick = () => {
+    setShowPeriodModal(true)
+  }
+
+  const handleExport = async (dateRange) => {
+    setShowPeriodModal(false)
+    await exportToExcel(filteredReservations, dateRange)
   }
 
   const handleResetFilters = () => {
@@ -87,7 +94,7 @@ function Income() {
   if (loading) {
     return (
       <div className={styles.incomePage}>
-        <Header onFilterClick={() => setShowFilterModal(true)} onExportClick={handleExport} />
+        <Header onFilterClick={() => setShowFilterModal(true)} onExportClick={handleExportClick} />
 
         {/* Skeleton Stats Cards */}
         <div className={styles.statsGrid}>
@@ -117,7 +124,7 @@ function Income() {
 
   return (
     <div className={styles.incomePage}>
-      <Header onFilterClick={() => setShowFilterModal(true)} onExportClick={handleExport} />
+      <Header onFilterClick={() => setShowFilterModal(true)} onExportClick={handleExportClick} />
 
       {/* Stats Cards */}
       <div className={styles.statsGrid}>
@@ -171,6 +178,12 @@ function Income() {
         onDateRangeChange={setFilterDateRange}
         onReset={handleResetFilters}
         onApply={() => setShowFilterModal(false)}
+      />
+
+      <PeriodSelectorModal
+        isOpen={showPeriodModal}
+        onClose={() => setShowPeriodModal(false)}
+        onExport={handleExport}
       />
     </div>
   )

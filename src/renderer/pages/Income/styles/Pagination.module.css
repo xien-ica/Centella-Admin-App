@@ -82,10 +82,11 @@
 }
 
 .pageButton.active {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
+  background: linear-gradient(135deg, #231828 0%, #4a2f42 100%);
+  border-color: #231828;
   color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(35, 24, 40, 0.2);
 }
 
 .pageButton.ellipsis {
