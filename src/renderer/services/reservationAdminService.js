@@ -170,6 +170,7 @@ class ReservationAdminService {
       const approved = allReservations.filter(r => r.status === 'confirmed').length
       const rejected = allReservations.filter(r => r.status === 'rejected').length
       const cancelled = allReservations.filter(r => r.status === 'cancelled').length
+      const completed = allReservations.filter(r => r.status === 'completed').length
       const goodStanding = goodStandingData?.length || 0
 
       return {
@@ -179,6 +180,7 @@ class ReservationAdminService {
           approved,
           rejected,
           cancelled,
+          completed,
           goodStanding
         }
       }

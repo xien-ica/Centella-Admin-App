@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckCircle, Clock, XCircle, Ban, Users } from 'lucide-react'
+import { CheckCircle, Clock, XCircle, Ban, CheckCheck } from 'lucide-react'
 import styles from './StatsCard.module.css'
 
 const StatsCard = ({ stats }) => {
@@ -33,11 +33,11 @@ const StatsCard = ({ stats }) => {
       bgColor: '#e8e4e4'
     },
     {
-      label: 'Good Standing',
-      value: stats.goodStanding,
-      icon: Users,
-      iconColor: '#4a2f42',
-      bgColor: '#f0e6f0'
+      label: 'Completed',
+      value: stats.completed || 0,
+      icon: CheckCheck,
+      iconColor: '#1565c0',
+      bgColor: '#e3f2fd'
     }
   ]
 

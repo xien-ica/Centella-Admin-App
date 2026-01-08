@@ -45,17 +45,22 @@ export const getThisWeekReservations = (reservations) => {
   })
 }
 
-// Get next month's reservations
+// Get next month's reservations (excluding this week)
 export const getNextMonthReservations = (reservations) => {
   const today = new Date()
-  const todayString = formatDateToString(today)
   
+  // Start date: 8 days from now (after this week)
+  const startDate = new Date(today)
+  startDate.setDate(startDate.getDate() + 8)
+  const startDateString = formatDateToString(startDate)
+  
+  // End date: 1 month from today
   const nextMonth = new Date(today)
   nextMonth.setMonth(nextMonth.getMonth() + 1)
   const nextMonthString = formatDateToString(nextMonth)
   
   return reservations.filter(reservation => {
-    return reservation.date >= todayString && reservation.date <= nextMonthString
+    return reservation.date >= startDateString && reservation.date <= nextMonthString
   })
 }
 

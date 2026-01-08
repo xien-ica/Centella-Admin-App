@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './FilterButtons.module.css'
 
 const FilterButtons = ({ currentFilter, setFilter }) => {
-  const filters = ['pending', 'approved', 'rejected', 'cancelled']
+  const filters = ['pending', 'approved', 'rejected', 'cancelled', 'completed']
 
   return (
     <div className={styles.filters}>

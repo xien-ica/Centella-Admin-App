@@ -75,6 +75,8 @@ export const filterReservations = (reservations, filter) => {
       return reservations.filter(r => r.status === 'rejected')
     case 'cancelled':
       return reservations.filter(r => r.status === 'cancelled')
+    case 'completed':
+      return reservations.filter(r => r.status === 'completed')
     default:
       return reservations
   }
