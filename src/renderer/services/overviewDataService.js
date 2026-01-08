@@ -53,6 +53,7 @@ export const getRecentUnverifiedResidents = async (limit = 5) => {
 
 /**
  * Get today's reservations with facility and user details
+ * Includes all statuses (confirmed, pending, completed) for current date
  * @returns {Promise<Array>} Array of today's reservations
  */
 export const getTodayReservations = async () => {
@@ -83,7 +84,7 @@ export const getTodayReservations = async () => {
         )
       `)
       .eq('reservation_date', today)
-      .in('status', ['confirmed', 'pending'])
+      .in('status', ['confirmed', 'pending', 'completed'])
       .order('start_time', { ascending: true })
 
     if (error) throw error
@@ -120,7 +121,7 @@ export const getFacilityReservationCounts = async () => {
       .select('facility_id, reservation_date')
       .gte('reservation_date', firstDay)
       .lte('reservation_date', lastDay)
-      .in('status', ['confirmed', 'pending'])
+      .in('status', ['confirmed', 'pending', 'completed'])
 
     if (reservationsError) throw reservationsError
 

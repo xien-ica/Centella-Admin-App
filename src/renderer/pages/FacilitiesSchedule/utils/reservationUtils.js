@@ -54,9 +54,8 @@ export const getNextMonthReservations = (reservations) => {
   startDate.setDate(startDate.getDate() + 8)
   const startDateString = formatDateToString(startDate)
   
-  // End date: 1 month from today
-  const nextMonth = new Date(today)
-  nextMonth.setMonth(nextMonth.getMonth() + 1)
+  // End date: Last day of next calendar month
+  const nextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0) // Gets last day of next month
   const nextMonthString = formatDateToString(nextMonth)
   
   return reservations.filter(reservation => {
