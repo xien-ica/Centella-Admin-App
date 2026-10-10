@@ -107,7 +107,7 @@ export const registerAdmin = async (userData) => {
     console.log('Auth user created:', authData.user.id)
 
     // 5. Insert admin account data into database
-    const { data: account, error: insertError } = await supabase
+    const { data: _account, error: insertError } = await supabase
       .from("admin_accounts")
       .insert([
         {
