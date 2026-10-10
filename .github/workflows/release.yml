@@ -1,0 +1,58 @@
+name: Build & Release (Windows)
+
+on:
+  push:
+    tags:
+      - "v*" # e.g. v1.0.0
+  workflow_dispatch: # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write # needed to create the Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Squirrel looks for 7z.exe, but electron-winstaller only ships 7z-x64.exe
+      - name: Fix 7z for Squirrel
+        shell: pwsh
+        run: |
+          $v = "node_modules/electron-winstaller/vendor"
+          Copy-Item "$v/7z-x64.exe" "$v/7z.exe" -ErrorAction SilentlyContinue
+          Copy-Item "$v/7z-x64.dll" "$v/7z.dll" -ErrorAction SilentlyContinue
+
+      - name: Build installer
+        run: npm run make:win
+        # .env is not in the repo, so pass any variables your app needs at build time.
+        # Add them under Settings > Secrets and variables > Actions, then uncomment:
+        # env:
+        #   VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        #   VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      # Always keep a copy on the workflow run (useful for manual runs)
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: out/make/squirrel.windows/x64/*
+
+      # Only when triggered by a tag: attach the files to a GitHub Release
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            out/make/squirrel.windows/x64/*.exe
+            out/make/squirrel.windows/x64/*.nupkg
+            out/make/squirrel.windows/x64/RELEASES
