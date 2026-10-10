@@ -30,6 +30,7 @@ Desktop app (Electron + React) for Homeowners Association (HOA) administrators. 
 | Build | Vite |
 | Backend | Supabase (database, auth, Edge Functions) |
 | Reports | ExcelJS, jsPDF, jspdf-autotable |
+| Integrations | Resend (email), PayMongo (payments, test mode), Firebase Cloud Messaging (push notifications) |
 
 ## Project structure
 
@@ -163,15 +164,43 @@ You can also run the workflow manually from the **Actions** tab. That only produ
 
 If the app needs environment variables at build time, add them under **Settings → Secrets and variables → Actions** and reference them in the workflow's build step.
 
-## Supabase Edge Functions
+## Supabase Edge Functions & integrations
 
-Edge Functions live in `supabase/functions/`. To deploy one:
+Edge Functions live in `supabase/functions/` and talk to third-party services. These keys are **secrets**: they are stored in Supabase, used only inside Edge Functions, and never go in the app's `.env` or the client code.
+
+| Service | Used for | Secrets |
+| --- | --- | --- |
+| [Resend](https://resend.com) | Sending emails (for example verification codes) | `RESEND_API_KEY` |
+| [PayMongo](https://www.paymongo.com) | Payments (test/simulation mode) and payment webhooks | `PAYMONGO_SECRET_KEY`, `PAYMONGO_PUBLIC_KEY`, `PAYMONGO_WEBHOOK_SECRET` |
+| [Firebase Cloud Messaging](https://firebase.google.com) | Push notifications | `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` |
+| App config | Deep link scheme used in redirects | `APP_SCHEME` |
+
+### Set the secrets
+
+In the Supabase dashboard go to **Edge Functions → Secrets**, or use the CLI:
+
+```bash
+npx supabase secrets set RESEND_API_KEY=<value>
+npx supabase secrets set PAYMONGO_SECRET_KEY=<value> PAYMONGO_PUBLIC_KEY=<value> PAYMONGO_WEBHOOK_SECRET=<value>
+npx supabase secrets set FIREBASE_PROJECT_ID=<value> FIREBASE_CLIENT_EMAIL=<value>
+npx supabase secrets set APP_SCHEME=<value>
+```
+
+For `FIREBASE_PRIVATE_KEY`, use the dashboard or load it from a file so the line breaks in the key are kept. List what is set (names only) with `npx supabase secrets list`.
+
+### Deploy a function
 
 ```bash
 npx supabase login
 npx supabase link --project-ref <your-project-ref>
 npx supabase functions deploy <function-name>
 ```
+
+### Notes
+
+- **PayMongo** is used in test mode (simulated payments). Use the `sk_test_` / `pk_test_` keys. Switching to live payments means replacing them with live keys and updating the webhook secret.
+- Point the PayMongo webhook at your deployed payment-webhook function URL, and keep `PAYMONGO_WEBHOOK_SECRET` in sync with the one PayMongo gives you.
+- Never commit these values. If one is exposed, rotate it in the service's dashboard and update the Supabase secret.
 
 ## Troubleshooting
 
