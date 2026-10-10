@@ -1,7 +1,7 @@
 import { IonIcon } from "@ionic/react"
 import { shieldCheckmarkOutline } from "ionicons/icons"
 import { useState, useEffect, memo, useRef } from "react"
-import styles from "./Loading.module.css"
+import styles from "./loading.module.css"
 
 const STUCK_TIMER_DELAY = 30000 // 30 seconds
 const STUCK_MESSAGE = "Looks like it's taking a while... Try restarting the app."

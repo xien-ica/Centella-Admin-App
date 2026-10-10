@@ -3,7 +3,7 @@ import { cashOutline, walletOutline, calendarOutline } from "ionicons/icons"
 import { useIncome } from "./hooks/useIncome"
 import { useFilters } from "./hooks/useFilters"
 import { usePagination } from "./hooks/usePagination"
-import { exportToExcel } from "./utils/export"
+import { exportReport } from "./utils/export"
 import { Header } from "./components/Header"
 import { StatsCard } from "./components/StatsCard"
 import { PeriodSelector } from "./components/PeriodSelector"
@@ -81,9 +81,9 @@ function Income() {
     setShowPeriodModal(true)
   }
 
-  const handleExport = async (dateRange) => {
+  const handleExport = async (dateRange, format = "pdf") => {
     setShowPeriodModal(false)
-    await exportToExcel(filteredReservations, dateRange)
+    await exportReport(filteredReservations, dateRange, format)
   }
 
   const handleResetFilters = () => {

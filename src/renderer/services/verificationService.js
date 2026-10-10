@@ -2,7 +2,7 @@ import { supabase } from "../../utils/supabase"
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-verification-code`
 // ✅ Using the official Supabase-provided env variable name
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 
 /**
  * Send verification code to admin email

@@ -28,7 +28,7 @@ const createWindow = () => {
       ? path.join(__dirname, '../../src/assets/icons/icon.ico')
       : path.join(__dirname, '../../src/assets/icons/icon.png'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true
