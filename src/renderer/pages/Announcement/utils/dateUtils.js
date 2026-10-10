@@ -37,7 +37,7 @@ export const formatScheduledDateTime = (date, time) => {
       minute: '2-digit',
       hour12: true
     })
-  } catch (error) {
+  } catch (_error) {
     return "Invalid date"
   }
 }
