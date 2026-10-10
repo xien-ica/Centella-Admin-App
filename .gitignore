@@ -119,3 +119,8 @@ desktop.ini
 # *.spec.js
 # __tests__/
 # __mocks__/
+
+# Supabase local state and environment files
+supabase/.temp/
+supabase/.branches/
+supabase/**/.env
